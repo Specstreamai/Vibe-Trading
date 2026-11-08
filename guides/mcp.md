@@ -79,6 +79,13 @@ This chain returns an empty result only when its enabled sources finish without
 an unresolved error; an unavailable source produces an actionable error if no
 other source returns results.
 
+To use the [SpecStream Search API](https://specstream.ai/benchmarks) in `web_search`,
+set `SPECSTREAM_API_KEY`. When set, searches try IQS first if `ALIYUN_IQS_API_KEY`
+is set, then SpecStream, then the other sources; errors and empty results fall
+through. Results keep the same title, URL, snippet, and security-warning format;
+SpecStream snippets are capped at 300 characters. Unset the key to restore the
+existing search path.
+
 To try [Parallel's hosted search MCP](https://docs.parallel.ai/integrations/mcp/quickstart)
 inside `web_search`, set `VIBE_TRADING_SEARCH_PARALLEL=1`. This is off by default.
 When enabled, searches try IQS first if `ALIYUN_IQS_API_KEY` is set, then Parallel,

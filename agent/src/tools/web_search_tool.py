@@ -230,6 +230,18 @@ class WebSearchTool(BaseTool):
             except Exception as exc:  # noqa: BLE001
                 logger.warning("aliyun_iqs failed: %s, trying other search providers", exc)
 
+        specstream_key = get_env_config().data.specstream_api_key.strip()
+        if specstream_key:
+            try:
+                from src.tools._specstream_search import search_specstream
+
+                payload = search_specstream(query, max_results, specstream_key)
+                if payload["results"]:
+                    return json.dumps(payload, ensure_ascii=False)
+                logger.warning("SpecStream returned no results, trying other search providers")
+            except Exception as exc:  # noqa: BLE001 — keep existing sources usable
+                logger.warning("SpecStream search failed: %s, trying other search providers", exc)
+
         parallel_error: str | None = None
         if get_env_config().agent_tuning.vibe_trading_search_parallel:
             try:
